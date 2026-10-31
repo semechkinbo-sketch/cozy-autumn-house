@@ -1,0 +1,1069 @@
+:root {
+  --scene-scale: 1;
+
+  /* Crisp & Cozy Autumn Day Sky (Soft Blue to Golden Horizon) */
+  --sky-top: #3a7bd5;
+  --sky-mid: #89c4f4;
+  --sky-bottom: #fde3a7;
+
+  --ground-rim: #d38236;
+  --ground-color: #8c4a27;
+
+  --house-wall: #ffeaa7;
+  --house-roof: #c0392b;
+  --door-color: #5c3a28;
+
+  /* Distant Autumn Forest */
+  --dist-tree-light: #b85d43;
+  --dist-tree-dark: #7a352c;
+  --mist-color: rgba(255, 238, 205, 0.5);
+
+  /* Foreground Autumn Spruce & Maple Palette */
+  --spruce-lit: #f39c12;
+  --spruce-mid: #d35400;
+  --spruce-shade: #8e281d;
+  --spruce-deep: #4f1414;
+  --spruce-rim: rgba(255, 224, 130, 0.55);
+  --trunk-lit: #7a4930;
+  --trunk-shade: #3d2214;
+
+  --card-shadow: 0 28px 60px rgba(0, 0, 0, 0.65);
+}
+
+body.night {
+  /* Stormy Autumn Night */
+  --sky-top: #09071a;
+  --sky-mid: #1a1538;
+  --sky-bottom: #33224c;
+
+  --ground-rim: #3a2a38;
+  --ground-color: #1f1624;
+
+  --house-wall: #9e9167;
+  --house-roof: #6e221e;
+
+  --dist-tree-light: #282047;
+  --dist-tree-dark: #140f29;
+  --mist-color: rgba(130, 115, 185, 0.22);
+
+  --spruce-lit: #7d4e6d;
+  --spruce-mid: #4a2d4f;
+  --spruce-shade: #2b1836;
+  --spruce-deep: #150a1e;
+  --spruce-rim: rgba(205, 180, 255, 0.35);
+  --trunk-lit: #422922;
+  --trunk-shade: #1c100d;
+}
+
+* {
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle at center, #1a121b 0%, #09070c 100%);
+  font-family: system-ui, -apple-system, sans-serif;
+  overflow: hidden;
+  touch-action: manipulation;
+}
+
+.scene-wrapper {
+  width: 440px;
+  height: 440px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1100px;
+  transform: scale(var(--scene-scale));
+  transform-origin: center center;
+  flex-shrink: 0;
+}
+
+.nft-card {
+  width: 440px;
+  height: 440px;
+  border-radius: 34px;
+  background: linear-gradient(to bottom, var(--sky-top) 0%, var(--sky-mid) 62%, var(--sky-bottom) 100%);
+  position: relative;
+  overflow: hidden;
+  /* Fix for sharp bottom corners on mobile/WebKit when 3D transforms are active */
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+  mask-image: radial-gradient(white, black);
+  isolation: isolate;
+  box-shadow: var(--card-shadow), inset 0 0 0 2px rgba(255, 255, 255, 0.25);
+  transition: background 0.8s ease;
+  will-change: transform;
+}
+
+/* Inner border ring so it stays crisp over the ground layer */
+.nft-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 34px;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.25);
+  pointer-events: none;
+  z-index: 30;
+}
+
+/* Lightning Flash Overlay */
+.lightning-flash {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 250, 240, 0.88);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 25;
+  mix-blend-mode: screen;
+}
+.lightning-flash.strike {
+  animation: flashStrike 0.45s ease-out;
+}
+@keyframes flashStrike {
+  0% { opacity: 0; }
+  15% { opacity: 0.95; }
+  30% { opacity: 0.2; }
+  45% { opacity: 0.75; }
+  100% { opacity: 0; }
+}
+
+.nft-card.thunder-shake {
+  animation: cardShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+@keyframes cardShake {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  20% { transform: translate3d(-4px, 3px, 0); }
+  40% { transform: translate3d(4px, -3px, 0); }
+  60% { transform: translate3d(-3px, -2px, 0); }
+  80% { transform: translate3d(3px, 2px, 0); }
+}
+
+/* ================= STARS ================= */
+.stars {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+body.night .stars { opacity: 1; }
+
+.star {
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+  animation: twinkle 2.2s infinite alternate;
+}
+@keyframes twinkle {
+  0% { opacity: 0.2; transform: scale(0.8); }
+  100% { opacity: 0.95; transform: scale(1.25); }
+}
+
+/* ================= SUN / HARVEST MOON ================= */
+.celestial {
+  position: absolute;
+  top: 26px;
+  right: 28px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff9c4, #ffd32a 65%, #f39c12 100%);
+  box-shadow: 0 0 32px #ffd32a, 0 0 60px rgba(255, 211, 42, 0.5);
+  cursor: pointer;
+  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 7;
+}
+.celestial:hover { transform: scale(1.12); }
+body.night .celestial {
+  background: radial-gradient(circle at 35% 35%, #fff8e7, #ffe0b2 72%, #ffb74d 100%);
+  box-shadow: 0 0 28px rgba(255, 224, 178, 0.8), 0 0 55px rgba(255, 183, 77, 0.35);
+  transform: rotate(-25deg);
+}
+.celestial::after {
+  content: '';
+  position: absolute;
+  top: 11px;
+  left: 13px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(190, 150, 110, 0.45);
+  opacity: 0;
+  transition: opacity 0.4s;
+  box-shadow: 13px 11px 0 -1px rgba(190, 150, 110, 0.4), 4px 18px 0 -3px rgba(190, 150, 110, 0.4);
+}
+body.night .celestial::after { opacity: 1; }
+
+/* ================= INTERACTIVE STORM CLOUD & RAIN ================= */
+.storm-cloud {
+  position: absolute;
+  top: 30px;
+  left: 34px;
+  width: 92px;
+  height: 30px;
+  background: linear-gradient(to bottom, #ffffff, #dfe6e9);
+  border-radius: 50px;
+  cursor: pointer;
+  z-index: 12;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.14), inset 0 -3px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, background 0.6s ease, box-shadow 0.4s ease;
+  animation: hoverCloud 6s ease-in-out infinite alternate;
+}
+.storm-cloud:hover { transform: scale(1.06); }
+.storm-cloud::before, .storm-cloud::after {
+  content: '';
+  position: absolute;
+  background: inherit;
+  border-radius: 50%;
+}
+.storm-cloud::before {
+  width: 46px;
+  height: 46px;
+  top: -22px;
+  left: 12px;
+}
+.storm-cloud::after {
+  width: 34px;
+  height: 34px;
+  top: -14px;
+  left: 44px;
+}
+.storm-cloud.raining,
+body.night .storm-cloud {
+  background: linear-gradient(to bottom, #636e72, #2d3436);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45), inset 0 -4px 8px rgba(0, 0, 0, 0.35);
+}
+.storm-cloud.bolt-glow {
+  box-shadow: 0 0 28px #ffeaa7, inset 0 0 14px #ffeaa7 !important;
+}
+
+@keyframes hoverCloud {
+  0% { transform: translateX(-6px) translateY(0); }
+  100% { transform: translateX(8px) translateY(-3px); }
+}
+
+/* Rain Layer */
+.rain-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 11;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  overflow: hidden;
+}
+.rain-layer.active { opacity: 1; }
+
+.raindrop {
+  position: absolute;
+  top: -30px;
+  width: 1.5px;
+  height: 18px;
+  background: linear-gradient(to bottom, transparent, rgba(220, 240, 255, 0.75));
+  transform: rotate(14deg);
+  animation: fallRain linear infinite;
+}
+@keyframes fallRain {
+  0% { transform: translate3d(0, -20px, 0) rotate(14deg); opacity: 0.9; }
+  100% { transform: translate3d(-85px, 460px, 0) rotate(14deg); opacity: 0.2; }
+}
+
+/* ================= DISTANT FOREST LAYER ================= */
+.forest-distant {
+  position: absolute;
+  bottom: 66px;
+  left: -20px;
+  width: calc(100% + 40px);
+  height: 175px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.dist-pine {
+  position: absolute;
+  bottom: 0;
+  transform-origin: bottom center;
+  background: linear-gradient(105deg, var(--dist-tree-dark) 0%, var(--dist-tree-light) 100%);
+  clip-path: polygon(
+    50% 0%, 66% 24%, 58% 24%, 78% 50%, 67% 50%, 89% 76%, 76% 76%,
+    100% 100%, 0% 100%, 24% 76%, 11% 76%, 33% 50%, 22% 50%, 42% 24%, 34% 24%
+  );
+  transition: background 0.8s ease, opacity 0.8s ease;
+  animation: gentleBreeze 7s ease-in-out infinite alternate;
+}
+.dp-1 { left: 0px; width: 62px; height: 145px; opacity: 0.75; animation-delay: 0s; }
+.dp-2 { left: 52px; width: 54px; height: 125px; opacity: 0.55; animation-delay: -1.8s; }
+.dp-3 { left: 102px; width: 66px; height: 160px; opacity: 0.65; animation-delay: -3.2s; }
+.dp-4 { left: 162px; width: 58px; height: 135px; opacity: 0.45; animation-delay: -0.9s; }
+.dp-5 { right: 155px; width: 68px; height: 155px; opacity: 0.5; animation-delay: -2.4s; }
+.dp-6 { right: 98px; width: 56px; height: 130px; opacity: 0.65; animation-delay: -1.2s; }
+.dp-7 { right: 44px; width: 64px; height: 148px; opacity: 0.7; animation-delay: -2.8s; }
+
+.forest-mist {
+  position: absolute;
+  bottom: 62px;
+  left: -10%;
+  width: 120%;
+  height: 55px;
+  background: radial-gradient(ellipse at center, var(--mist-color) 0%, transparent 75%);
+  filter: blur(6px);
+  z-index: 2;
+  pointer-events: none;
+  transition: background 0.8s ease;
+  animation: driftMist 10s ease-in-out infinite alternate;
+}
+
+@keyframes driftMist {
+  0% { transform: translateX(-10px) scaleY(0.95); }
+  100% { transform: translateX(10px) scaleY(1.08); }
+}
+@keyframes gentleBreeze {
+  0% { transform: rotate(-1.2deg); }
+  100% { transform: rotate(1.4deg); }
+}
+
+/* ================= FOREGROUND AUTUMN SPRUCE TREES ================= */
+.forest-midground {
+  position: absolute;
+  bottom: 64px;
+  left: 0;
+  width: 100%;
+  height: 210px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.spruce-tree {
+  position: absolute;
+  bottom: 0;
+  transform-origin: bottom center;
+  pointer-events: auto;
+  cursor: pointer;
+  animation: treeWindSway 5.5s ease-in-out infinite alternate;
+  transition: filter 0.3s ease;
+}
+.spruce-tree:hover {
+  filter: brightness(1.1) drop-shadow(0 0 8px rgba(255, 200, 120, 0.25));
+}
+
+.spruce-1 { left: 6px; width: 86px; height: 176px; z-index: 3; animation-delay: 0s; }
+.spruce-2 { left: 64px; width: 72px; height: 142px; z-index: 2; animation-delay: -1.8s; animation-duration: 6.2s; }
+.spruce-3 { right: 62px; width: 74px; height: 148px; z-index: 2; animation-delay: -0.9s; animation-duration: 5.9s; }
+.spruce-4 { right: 4px; width: 90px; height: 184px; z-index: 3; animation-delay: -2.7s; }
+
+.tree-trunk {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16%;
+  height: 20%;
+  background: linear-gradient(90deg, var(--trunk-shade) 0%, var(--trunk-lit) 75%, var(--trunk-shade) 100%);
+  border-radius: 3px 3px 6px 6px;
+  box-shadow: inset 0 7px 6px rgba(0, 0, 0, 0.55);
+  transition: background 0.8s ease;
+  z-index: 1;
+}
+
+.tree-crown {
+  position: relative;
+  width: 100%;
+  height: 86%;
+  z-index: 2;
+}
+
+.tier-wrap {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  transform-origin: top center;
+  filter: drop-shadow(0 5px 3px rgba(25, 10, 5, 0.38));
+  animation: tierBreeze 3.6s ease-in-out infinite alternate;
+}
+
+.spruce-tier {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: linear-gradient(
+    102deg,
+    var(--spruce-deep) 0%,
+    var(--spruce-shade) 34%,
+    var(--spruce-mid) 58%,
+    var(--spruce-lit) 92%,
+    #ffeaa7 100%
+  );
+  transition: background 0.8s ease;
+  clip-path: polygon(
+    50% 0%, 65% 22%, 60% 21%, 80% 50%, 73% 49%, 95% 80%, 100% 92%,
+    88% 89%, 82% 98%, 70% 91%, 62% 100%, 50% 92%, 38% 100%, 30% 91%,
+    18% 98%, 12% 89%, 0% 92%, 5% 80%, 27% 49%, 20% 50%, 40% 21%, 35% 22%
+  );
+}
+
+.spruce-tier::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to left, var(--spruce-rim) 0%, transparent 32%);
+  pointer-events: none;
+}
+.spruce-tier::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 48%;
+  width: 10%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.18), transparent);
+  transform: skewX(4deg);
+  pointer-events: none;
+}
+
+.tier-wrap.t-1 { bottom: 0%; width: 100%; height: 42%; z-index: 1; animation-delay: -0.4s; }
+.tier-wrap.t-2 { bottom: 24%; width: 84%; height: 40%; z-index: 2; animation-delay: -0.9s; }
+.tier-wrap.t-3 { bottom: 47%; width: 68%; height: 36%; z-index: 3; animation-delay: -1.4s; }
+.tier-wrap.t-4 { bottom: 67%; width: 50%; height: 35%; z-index: 4; animation-delay: -1.9s; }
+
+.pinecone {
+  position: absolute;
+  width: 6px;
+  height: 9px;
+  background: radial-gradient(circle at 35% 35%, #d35400, #5c2310 80%);
+  border-radius: 45% 45% 55% 55%;
+  z-index: 5;
+  box-shadow: 0 2px 3px rgba(0,0,0,0.4);
+  transform-origin: top center;
+  animation: coneSwing 3s ease-in-out infinite alternate;
+}
+.pinecone.pc-left { bottom: 26%; left: 26%; }
+.pinecone.pc-right { bottom: 48%; right: 28%; animation-delay: -1.5s; }
+
+@keyframes coneSwing {
+  0% { transform: rotate(-6deg); }
+  100% { transform: rotate(6deg); }
+}
+@keyframes treeWindSway {
+  0% { transform: rotate(-1.5deg); }
+  100% { transform: rotate(1.8deg); }
+}
+@keyframes tierBreeze {
+  0% { transform: translateX(-50%) rotate(-1.2deg); }
+  100% { transform: translateX(-50%) rotate(1.5deg); }
+}
+
+.spruce-tree.rustle .tree-crown {
+  animation: treeShake 0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+@keyframes treeShake {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  15% { transform: rotate(-5.5deg) scale(1.03, 0.98); }
+  35% { transform: rotate(5deg) scale(0.98, 1.03); }
+  55% { transform: rotate(-3.5deg) scale(1.01, 0.99); }
+  75% { transform: rotate(2.2deg); }
+}
+
+/* Swirling Autumn Leaves & Night Spores */
+.tree-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  overflow: hidden;
+}
+.forest-particle {
+  position: absolute;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+.forest-particle.autumn-leaf {
+  width: 9px;
+  height: 6px;
+  border-radius: 70% 0 70% 0;
+  animation: fallLeaf 1.35s ease-in-out forwards;
+}
+.forest-particle.firefly-burst {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ffbe76;
+  box-shadow: 0 0 8px #ff9f1a, 0 0 14px #eb4d4b;
+  animation: floatFireflyBurst 1.35s ease-out forwards;
+}
+
+@keyframes fallLeaf {
+  0% { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(1); }
+  50% { transform: translate(calc(var(--dx, 24px) * -0.5), calc(var(--dy, 70px) * 0.5)) rotate(140deg) scale(0.95); }
+  100% { opacity: 0; transform: translate(var(--dx, 24px), var(--dy, 70px)) rotate(var(--rot, 300deg)) scale(0.75); }
+}
+@keyframes floatFireflyBurst {
+  0% { opacity: 1; transform: translate(0, 0) scale(0.5); }
+  50% { opacity: 1; transform: translate(calc(var(--dx, 20px) * 0.6), calc(var(--dy, -40px) * 0.6)) scale(1.25); }
+  100% { opacity: 0; transform: translate(var(--dx, 20px), var(--dy, -55px)) scale(0.3); }
+}
+
+/* Ambient Nocturnal Fireflies */
+.ambient-fireflies {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+body.night .ambient-fireflies { opacity: 1; }
+.ambient-fly {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #ffda79;
+  border-radius: 50%;
+  box-shadow: 0 0 8px 2px rgba(255, 177, 66, 0.85);
+  animation: driftFly 4.5s ease-in-out infinite alternate;
+}
+@keyframes driftFly {
+  0% { transform: translate(0, 0) scale(0.6); opacity: 0.25; }
+  50% { opacity: 1; transform: translate(8px, -10px) scale(1.15); }
+  100% { transform: translate(-6px, -18px) scale(0.7); opacity: 0.35; }
+}
+
+/* ================= GROUND & GLOWING MUSHROOMS ================= */
+.ground {
+  position: absolute;
+  bottom: -40px;
+  left: -10%;
+  width: 120%;
+  height: 125px;
+  background: radial-gradient(ellipse at 50% 15%, var(--ground-rim) 0%, var(--ground-color) 68%);
+  border-radius: 50% 50% 0 0;
+  box-shadow: inset 0 6px 15px rgba(255, 220, 160, 0.16), 0 -4px 16px rgba(0, 0, 0, 0.25);
+  transition: background 0.8s ease;
+  z-index: 7;
+}
+
+/* Interactive Glowing Mushrooms */
+.mushroom-cluster {
+  position: absolute;
+  bottom: 52px;
+  left: 76px;
+  width: 34px;
+  height: 24px;
+  z-index: 9;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.mushroom-cluster:hover { transform: scale(1.12); }
+.mushroom-cluster.boing { animation: shroomBoing 0.5s ease; }
+@keyframes shroomBoing {
+  0%, 100% { transform: scale(1); }
+  35% { transform: scale(1.25, 0.82); }
+  65% { transform: scale(0.9, 1.15); }
+}
+
+.shroom { position: absolute; bottom: 0; }
+.shroom-stem {
+  width: 5px;
+  height: 10px;
+  background: #f5cd79;
+  border-radius: 2px;
+  margin: 0 auto;
+}
+.shroom-cap {
+  width: 15px;
+  height: 9px;
+  background: radial-gradient(circle at 50% 30%, #e15f41, #c44569);
+  border-radius: 12px 12px 3px 3px;
+  transition: all 0.4s ease;
+  box-shadow: inset 0 -2px 3px rgba(0,0,0,0.25);
+}
+.shroom-1 { left: 2px; }
+.shroom-2 { left: 16px; transform: scale(0.8) rotate(8deg); }
+
+.mushroom-cluster.glow .shroom-cap,
+body.night .mushroom-cluster.glow .shroom-cap {
+  background: radial-gradient(circle at 50% 30%, #7ef9ff, #00d2d3);
+  box-shadow: 0 0 14px #00d2d3, 0 0 24px rgba(0, 210, 211, 0.65);
+}
+
+/* ================= HOUSE & INTERACTIVE ELEMENTS ================= */
+.house {
+  position: absolute;
+  bottom: 68px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 160px;
+  height: 124px;
+  z-index: 8;
+}
+
+.walls {
+  width: 100%;
+  height: 100%;
+  background: var(--house-wall);
+  border-radius: 8px;
+  position: relative;
+  box-shadow: inset -12px 0 0 rgba(0, 0, 0, 0.08), 0 8px 20px rgba(0, 0, 0, 0.22);
+  transition: background 0.8s ease;
+}
+
+.roof {
+  position: absolute;
+  top: -70px;
+  left: -18px;
+  width: 196px;
+  height: 74px;
+  background: var(--house-roof);
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  transition: background 0.8s ease;
+  z-index: 4;
+}
+
+.chimney {
+  position: absolute;
+  top: -58px;
+  left: 22px;
+  width: 24px;
+  height: 46px;
+  background: var(--house-roof);
+  border-radius: 3px;
+  cursor: pointer;
+  z-index: 1;
+  transition: transform 0.2s, background 0.8s ease;
+}
+.chimney:hover { transform: translateY(-2px); }
+.chimney::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -3px;
+  width: 30px;
+  height: 7px;
+  background: #962d22;
+  border-radius: 3px;
+}
+
+.smoke-container {
+  position: absolute;
+  top: -72px;
+  left: 27px;
+  z-index: 0;
+  pointer-events: none;
+}
+.smoke {
+  width: 13px;
+  height: 13px;
+  background: rgba(255, 255, 255, 0.82);
+  border-radius: 50%;
+  position: absolute;
+  animation: rise 2.8s infinite ease-out;
+  opacity: 0;
+  filter: blur(1px);
+}
+.smoke:nth-child(2) { animation-delay: 0.9s; }
+.smoke:nth-child(3) { animation-delay: 1.8s; }
+.smoke-container.off .smoke { animation: none; opacity: 0; }
+
+@keyframes rise {
+  0% { transform: translateY(0) scale(0.8); opacity: 0.85; }
+  100% { transform: translateY(-55px) translateX(-14px) scale(2.3); opacity: 0; }
+}
+
+/* Windows-style Window & Guardian Cat */
+.window {
+  position: absolute;
+  top: 32px;
+  left: 22px;
+  width: 46px;
+  height: 46px;
+  border: 3.5px solid #fff;
+  border-radius: 9px;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 2px;
+  background: #fff;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+.window:hover { transform: scale(1.05); }
+
+.win-pane {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+.win-red { background: #e74c3c; }
+.win-green { background: #2ecc71; }
+.win-blue { background: #3498db; }
+.win-yellow { background: #f1c40f; }
+
+.win-pane::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.78);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+.window:not(.lit) .win-pane::after { opacity: 1; }
+.window.lit { box-shadow: 0 0 24px rgba(255, 218, 121, 0.95); }
+.window:not(.lit) { box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.6); }
+
+/* Guardian Cat Silhouette */
+.cat-silhouette {
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 12px;
+  background: #1e272e;
+  border-radius: 50% 50% 0 0;
+  z-index: 5;
+  pointer-events: none;
+  transition: background 0.4s ease;
+}
+.cat-silhouette::before, .cat-silhouette::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  border-left: 3.5px solid transparent;
+  border-right: 3.5px solid transparent;
+  border-bottom: 6px solid #1e272e;
+  transition: border-bottom-color 0.4s ease;
+}
+.cat-silhouette::before { left: -1px; transform: rotate(-22deg); }
+.cat-silhouette::after { right: -1px; transform: rotate(22deg); }
+
+.cat-eyes {
+  position: absolute;
+  top: 4px;
+  left: 3px;
+  width: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+.cat-eye {
+  width: 2.5px;
+  height: 2.5px;
+  border-radius: 50%;
+  animation: catBlink 4s infinite;
+  transition: all 0.4s ease;
+}
+@keyframes catBlink {
+  0%, 94%, 100% { transform: scaleY(1); }
+  97% { transform: scaleY(0.1); }
+}
+.window.lit .cat-eye { background: #ffffff; }
+.window:not(.lit) .cat-silhouette { background: #0a0a0a; }
+.window:not(.lit) .cat-silhouette::before,
+.window:not(.lit) .cat-silhouette::after { border-bottom-color: #0a0a0a; }
+.window:not(.lit) .cat-eye {
+  background: #2ecc71;
+  box-shadow: 0 0 4px #2ecc71;
+}
+
+/* Door & Steaming Tea Inside */
+.door-frame {
+  position: absolute;
+  bottom: 0;
+  right: 22px;
+  width: 44px;
+  height: 76px;
+  background: #ffda79;
+  border-radius: 8px 8px 0 0;
+  border: 3.5px solid #fff;
+  border-bottom: none;
+  perspective: 400px;
+  transition: background 0.4s ease;
+  box-shadow: inset 0 0 15px rgba(255, 165, 2, 0.85);
+}
+.door-frame.dimmed {
+  background: #3e2822 !important;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.6);
+}
+
+/* Cozy Tea Cup revealed inside doorway */
+.tea-table {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 14px;
+  background: #8c583a;
+  border-radius: 3px 3px 0 0;
+  z-index: 1;
+  pointer-events: none;
+}
+.tea-cup {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 11px;
+  height: 7px;
+  background: #f7f1e3;
+  border-radius: 1px 1px 5px 5px;
+  box-shadow: inset 0 2px 0 #d35400;
+  z-index: 1;
+}
+.tea-steam {
+  position: absolute;
+  bottom: 22px;
+  left: 50%;
+  width: 4px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 50%;
+  filter: blur(1px);
+  animation: steamRise 1.8s infinite ease-out;
+}
+@keyframes steamRise {
+  0% { transform: translate(-50%, 0) scale(0.7); opacity: 0.85; }
+  100% { transform: translate(-30%, -12px) scale(1.5); opacity: 0; }
+}
+
+.door {
+  width: 100%;
+  height: 100%;
+  background: var(--door-color);
+  border-radius: 4px 4px 0 0;
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+}
+.door::after {
+  content: '';
+  position: absolute;
+  top: 52%;
+  right: 6px;
+  width: 5px;
+  height: 5px;
+  background: #ffd32a;
+  border-radius: 50%;
+}
+.door.open { transform: rotateY(-68deg); }
+
+/* Interactive Glowing Pumpkin on the Porch */
+.pumpkin {
+  position: absolute;
+  bottom: -3px;
+  right: -18px;
+  width: 24px;
+  height: 19px;
+  background: radial-gradient(circle at 50% 35%, #ff9f1a, #d35400 85%);
+  border-radius: 45% 45% 42% 42%;
+  cursor: pointer;
+  z-index: 6;
+  box-shadow: inset 0 -2px 4px rgba(0,0,0,0.35), 0 3px 6px rgba(0,0,0,0.25);
+  transition: transform 0.25s ease, box-shadow 0.4s ease;
+}
+.pumpkin:hover { transform: scale(1.12) rotate(4deg); }
+.pumpkin::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 10px;
+  width: 4px;
+  height: 5px;
+  background: #218c74;
+  border-radius: 2px;
+  transform: rotate(-12deg);
+}
+.pumpkin-eyes {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 14px;
+  display: flex;
+  justify-content: space-between;
+}
+.p-eye {
+  width: 0;
+  height: 0;
+  border-left: 2.5px solid transparent;
+  border-right: 2.5px solid transparent;
+  border-bottom: 4px solid #3d1c0a;
+  transition: border-bottom-color 0.3s ease, filter 0.3s ease;
+}
+.pumpkin-mouth {
+  position: absolute;
+  bottom: 4px;
+  left: 6px;
+  width: 12px;
+  height: 4px;
+  background: #3d1c0a;
+  border-radius: 0 0 8px 8px;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+.pumpkin.lit {
+  box-shadow: 0 0 18px rgba(255, 165, 2, 0.85);
+}
+.pumpkin.lit .p-eye {
+  border-bottom-color: #fff200;
+  filter: drop-shadow(0 0 3px #ff9f1a);
+}
+.pumpkin.lit .pumpkin-mouth {
+  background: #fff200;
+  box-shadow: 0 0 6px #ff9f1a;
+}
+
+/* ================= AUTUMN OWL ON THE ROOF ================= */
+.bird-wrapper {
+  position: absolute;
+  top: -75px;
+  right: 30px;
+  width: 26px;
+  height: 25px;
+  z-index: 6;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.bird-wrapper:hover { transform: translateY(-4px) rotate(-4deg); }
+.bird-wrapper.jump { animation: birdJump 0.55s ease; }
+
+@keyframes birdJump {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  40% { transform: translateY(-14px) rotate(-8deg); }
+  75% { transform: translateY(-3px) rotate(5deg); }
+}
+
+.owl-body {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 22px;
+  height: 20px;
+  background: #78472a;
+  border-radius: 50% 50% 42% 42%;
+  box-shadow: inset -2px -2px 0 rgba(0, 0, 0, 0.25);
+  z-index: 2;
+}
+.owl-body::before, .owl-body::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  width: 6px;
+  height: 6px;
+  background: #59331d;
+  border-radius: 2px 50% 0 0;
+}
+.owl-body::before { left: 1px; transform: rotate(-18deg); }
+.owl-body::after { right: 1px; transform: rotate(18deg) scaleX(-1); }
+
+.owl-belly {
+  position: absolute;
+  bottom: 0;
+  left: 4px;
+  width: 14px;
+  height: 11px;
+  background: #e6c594;
+  border-radius: 50% 50% 40% 40%;
+}
+
+.owl-eyes {
+  position: absolute;
+  top: 4px;
+  left: 3px;
+  width: 16px;
+  display: flex;
+  justify-content: space-between;
+  z-index: 4;
+}
+.owl-eye {
+  width: 6px;
+  height: 6px;
+  background: #f1c40f;
+  border-radius: 50%;
+  border: 1px solid #3d2214;
+  position: relative;
+}
+.owl-eye::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: 2.5px;
+  height: 2.5px;
+  background: #111;
+  border-radius: 50%;
+}
+body.night .owl-eye {
+  box-shadow: 0 0 6px #f1c40f;
+}
+
+.owl-beak {
+  position: absolute;
+  top: 8px;
+  left: 9px;
+  border-left: 2px solid transparent;
+  border-right: 2px solid transparent;
+  border-top: 3.5px solid #e67e22;
+  z-index: 5;
+}
+
+.owl-wing {
+  position: absolute;
+  top: 7px;
+  left: -1px;
+  width: 6px;
+  height: 11px;
+  background: #59331d;
+  border-radius: 50% 20% 50% 50%;
+  transform-origin: top center;
+  z-index: 3;
+}
+.bird-wrapper:hover .owl-wing,
+.bird-wrapper.jump .owl-wing {
+  animation: flap 0.16s infinite alternate;
+}
+@keyframes flap {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(35deg); }
+}
+
+.bird-legs {
+  position: absolute;
+  bottom: 0px;
+  left: 9px;
+  width: 8px;
+  height: 4px;
+  border-left: 1.5px solid #e67e22;
+  border-right: 1.5px solid #e67e22;
+  z-index: 1;
+}
+
+.bird-fx {
+  position: absolute;
+  top: -14px;
+  right: -8px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #ffeaa7;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 7;
+}
+.bird-fx.animate { animation: floatUpFx 1s ease-out forwards; }
+@keyframes floatUpFx {
+  0% { opacity: 1; transform: translateY(0) scale(0.7); }
+  100% { opacity: 0; transform: translateY(-22px) translateX(8px) scale(1.2); }
+}
