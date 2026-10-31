@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cozy House — Rainy Autumn Edition</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="scene-wrapper">
+	<div class="nft-card" id="card">
+	  <!-- Lightning Flash Overlay -->
+	  <div class="lightning-flash" id="lightningFlash"></div>
+
+	  <!-- Twinkling Stars Layer -->
+	  <div class="stars" id="stars"></div>
+
+	  <!-- Sun / Harvest Moon -->
+	  <div class="celestial" id="celestial"></div>
+
+	  <!-- Interactive Storm Cloud & Rain -->
+	  <div class="storm-cloud" id="stormCloud"></div>
+	  <div class="rain-layer" id="rainLayer"></div>
+
+	  <!-- Distant Autumn Forest -->
+	  <div class="forest-distant" id="layerDistant">
+		<div class="dist-pine dp-1"></div>
+		<div class="dist-pine dp-2"></div>
+		<div class="dist-pine dp-3"></div>
+		<div class="dist-pine dp-4"></div>
+		<div class="dist-pine dp-5"></div>
+		<div class="dist-pine dp-6"></div>
+		<div class="dist-pine dp-7"></div>
+	  </div>
+
+	  <!-- Atmospheric Mist -->
+	  <div class="forest-mist" id="layerMist"></div>
+
+	  <!-- Foreground Detailed Autumn Trees -->
+	  <div class="forest-midground" id="layerMidground">
+		<div class="spruce-tree spruce-1">
+		  <div class="tree-crown">
+			<div class="tier-wrap t-4"><div class="spruce-tier"></div></div>
+			<div class="tier-wrap t-3"><div class="spruce-tier"></div></div>
+			<div class="tier-wrap t-2">
+			  <div class="spruce-tier"></div>
+			  <div class="pinecone pc-right"></div>
+			</div>
+			<div class="tier-wrap t-1">
+			  <div class="spruce-tier"></div>
+			  <div class="pinecone pc-left"></div>
+			</div>
+		  </div>
+		  <div class="tree-trunk"></div>
+		</div>
+
+		<div class="spruce-tree spruce-2">
+		  <div class="tree-crown">
+			<div class="tier-wrap t-4"><div class="spruce-tier"></div></div>
+			<div class="tier-wrap t-3"><div class="spruce-tier"></div></div>
+			<div class="tier-wrap t-2"><div class="spruce-tier"></div></div>
+			<div class="tier-wrap t-1">
+			  <div class="spruce-tier"></div>
+			  <div class="pinecone pc-right"></div>
+			</div>
+		  </div>
+		  <div class="tree-trunk"></div>
+		</div>
+
+		<div class="spruce-tree spruce-3">
+		  <div class="tree-crown">
+			<div class="tier-wrap t-4"><div class="spruce-tier"></div></div>
+			<div class="tier-wrap t-3"><div class="spruce-tier"></div></div>
+			<div class="tier-wrap t-2">
+			  <div class="spruce-tier"></div>
+			  <div class="pinecone pc-left"></div>
+			</div>
+			<div class="tier-wrap t-1"><div class="spruce-tier"></div></div>
+		  </div>
+		  <div class="tree-trunk"></div>
+		</div>
+
+		<div class="spruce-tree spruce-4">
+		  <div class="tree-crown">
+			<div class="tier-wrap t-4"><div class="spruce-tier"></div></div>
+			<div class="tier-wrap t-3"><div class="spruce-tier"></div></div>
+			<div class="tier-wrap t-2">
+			  <div class="spruce-tier"></div>
+			  <div class="pinecone pc-left"></div>
+			</div>
+			<div class="tier-wrap t-1">
+			  <div class="spruce-tier"></div>
+			  <div class="pinecone pc-right"></div>
+			</div>
+		  </div>
+		  <div class="tree-trunk"></div>
+		</div>
+	  </div>
+
+	  <!-- Ambient Night Fireflies -->
+	  <div class="ambient-fireflies" id="ambientFireflies"></div>
+
+	  <!-- Interactive Tree Particles Container -->
+	  <div class="tree-particles" id="treeParticles"></div>
+
+	  <!-- Interactive Glowing Mushrooms on the Lawn -->
+	  <div class="mushroom-cluster" id="mushrooms">
+		<div class="shroom shroom-1">
+		  <div class="shroom-cap"></div>
+		  <div class="shroom-stem"></div>
+		</div>
+		<div class="shroom shroom-2">
+		  <div class="shroom-cap"></div>
+		  <div class="shroom-stem"></div>
+		</div>
+	  </div>
+
+	  <!-- Cozy House -->
+	  <div class="house" id="layerHouse">
+		<div class="smoke-container" id="smoke">
+		  <div class="smoke"></div>
+		  <div class="smoke"></div>
+		  <div class="smoke"></div>
+		</div>
+		<div class="chimney" id="chimney"></div>
+
+		<!-- Autumn Owl on the Roof -->
+		<div class="bird-wrapper" id="bird">
+		  <div class="bird-fx" id="birdFx">Hoot!</div>
+		  <div class="owl-body">
+			<div class="owl-eyes">
+			  <div class="owl-eye"></div>
+			  <div class="owl-eye"></div>
+			</div>
+			<div class="owl-beak"></div>
+			<div class="owl-belly"></div>
+			<div class="owl-wing"></div>
+		  </div>
+		  <div class="bird-legs"></div>
+		</div>
+
+		<div class="roof"></div>
+
+		<div class="walls">
+		  <!-- Windows-style Window with Guardian Cat -->
+		  <div class="window lit" id="window">
+			<div class="win-pane win-red"></div>
+			<div class="win-pane win-green"></div>
+			<div class="win-pane win-blue"></div>
+			<div class="win-pane win-yellow">
+			  <div class="cat-silhouette">
+				<div class="cat-eyes">
+				  <div class="cat-eye"></div>
+				  <div class="cat-eye"></div>
+				</div>
+			  </div>
+			</div>
+		  </div>
+
+		  <!-- Door & Steaming Tea Inside -->
+		  <div class="door-frame" id="doorFrame">
+			<div class="tea-steam"></div>
+			<div class="tea-cup"></div>
+			<div class="tea-table"></div>
+			<div class="door" id="door"></div>
+		  </div>
+
+		  <!-- Interactive Glowing Pumpkin -->
+		  <div class="pumpkin lit" id="pumpkin">
+			<div class="pumpkin-eyes">
+			  <div class="p-eye"></div>
+			  <div class="p-eye"></div>
+			</div>
+			<div class="pumpkin-mouth"></div>
+		  </div>
+		</div>
+	  </div>
+
+	  <!-- Foreground Autumn Hill -->
+	  <div class="ground"></div>
+	</div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
